@@ -1,0 +1,159 @@
+{% if monitors %}
+
+<div class="monitor-list">
+
+    {% for m in monitors %}
+
+    <article class="monitor-card">
+
+        <div class="monitor-card-main">
+
+            <div class="monitor-card-title-row">
+
+                <div class="monitor-identity">
+
+                    <span class="monitor-status-dot
+                        {% if m.last_status == 'UP' and m.is_enabled %}
+                            monitor-dot-up
+                        {% elif m.last_status == 'DOWN' %}
+                            monitor-dot-down
+                        {% else %}
+                            monitor-dot-unknown
+                        {% endif %}
+                    "></span>
+
+                    <div>
+                        <h3>{{ m.name }}</h3>
+
+                        {% if not m.is_enabled %}
+                            <span class="pill pill-muted">Paused</span>
+                        {% elif m.last_status == 'UP' %}
+                            <span class="monitor-state state-up">Operational</span>
+                        {% elif m.last_status == 'DOWN' %}
+                            <span class="monitor-state state-down">Down</span>
+                        {% else %}
+                            <span class="monitor-state state-unknown">Waiting for check</span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="monitor-visibility-badge">
+                    {% if m.is_public %}
+                        Public
+                    {% else %}
+                        Private
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+            <div class="monitor-url">
+                <span>↗</span>
+                <span class="mono truncate">{{ m.url }}</span>
+            </div>
+
+
+            <div class="monitor-stats">
+
+                <div>
+                    <span>Response</span>
+                    <strong>
+                        {% if m.last_response_ms is not none %}
+                            {{ "%.0f"|format(m.last_response_ms) }} ms
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Uptime</span>
+                    <strong>{{ "%.2f"|format(m.uptime_percent) }}%</strong>
+                </div>
+
+                <div>
+                    <span>HTTP</span>
+                    <strong>
+                        {{ m.last_http_status if m.last_http_status is not none else '—' }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Last checked</span>
+                    <strong>
+                        {{ m.last_checked_at or 'Never' }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="monitor-card-actions">
+
+            <form
+                method="post"
+                action="{{ url_for('admin.check_monitor', monitor_id=m.id) }}"
+            >
+                <button class="monitor-action action-check" type="submit">
+                    <span>⚡</span>
+                    Check now
+                </button>
+            </form>
+
+            <a
+                class="monitor-action"
+                href="{{ url_for('admin.edit_monitor', monitor_id=m.id) }}"
+            >
+                <span>✎</span>
+                Edit
+            </a>
+
+            <form
+                method="post"
+                action="{{ url_for('admin.toggle_monitor', monitor_id=m.id) }}"
+            >
+                <button class="monitor-action" type="submit">
+                    <span>{{ '⏸' if m.is_enabled else '▶' }}</span>
+                    {{ 'Pause' if m.is_enabled else 'Resume' }}
+                </button>
+            </form>
+
+            <form
+                method="post"
+                action="{{ url_for('admin.delete_monitor', monitor_id=m.id) }}"
+                onsubmit="return confirm('Delete this monitor?');"
+            >
+                <button class="monitor-action action-delete" type="submit">
+                    <span>✕</span>
+                    Delete
+                </button>
+            </form>
+
+        </div>
+
+    </article>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="monitor-empty-state">
+
+    <div class="empty-icon">⌁</div>
+
+    <h3>No monitors yet</h3>
+
+    <p>
+        Add your first website or API above and PulseWatch will
+        automatically start checking its health.
+    </p>
+
+</div>
+
+{% endif %}

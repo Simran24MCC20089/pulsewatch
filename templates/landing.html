@@ -1,0 +1,1277 @@
+{% extends "base.html" %}
+
+{% block title %}
+PulseWatch — Know when your services go silent.
+{% endblock %}
+
+{% block body_class %}
+page-public
+{% endblock %}
+
+{% block body %}
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="landing-ambient" aria-hidden="true">
+
+    <div class="grid-dots"></div>
+
+    <!-- Animated top pulse -->
+    <svg
+        class="landing-wave landing-wave-top"
+        viewBox="0 0 1440 220"
+        preserveAspectRatio="none"
+    >
+        <path
+            class="wave-primary"
+            d="M0 120
+               C100 120 135 55 230 105
+               S355 180 450 125
+               S575 35 670 90
+               S800 190 900 125
+               S1030 45 1130 105
+               S1280 180 1440 115"
+        />
+
+        <path
+            class="wave-secondary"
+            d="M0 145
+               C110 145 150 85 245 130
+               S380 185 475 145
+               S610 75 705 120
+               S835 195 930 145
+               S1060 80 1160 130
+               S1300 185 1440 140"
+        />
+    </svg>
+
+
+    <!-- Main pulse line -->
+    <svg
+        class="landing-wave landing-wave-main"
+        viewBox="0 0 1440 240"
+        preserveAspectRatio="none"
+    >
+        <path
+            class="wave-primary"
+            d="M0 135
+               L180 135
+               C220 135 235 135 260 135
+               L330 135
+               L365 95
+               L395 175
+               L430 45
+               L470 135
+               L650 135
+               C735 135 755 75 840 135
+               S980 195 1070 135
+               S1210 75 1300 135
+               L1440 135"
+        />
+    </svg>
+
+</div>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="nav landing-nav">
+
+    <a
+        class="brand"
+        href="/"
+    >
+
+        <!-- INLINE PULSEWATCH LOGO -->
+        <svg
+            class="brand-logo"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+        >
+
+            <!-- cloud -->
+            <path
+                class="logo-cloud"
+                d="M12 31
+                   C7 31 5 27 6 23
+                   C7 19 11 17 15 18
+                   C17 12 22 9 28 10
+                   C34 10 38 14 39 20
+                   C43 20 46 23 46 27
+                   C46 31 43 34 39 34
+                   H12"
+            />
+
+            <!-- heartbeat -->
+            <path
+                class="logo-pulse"
+                d="M8 26
+                   H16
+                   L20 20
+                   L24 31
+                   L29 15
+                   L34 27
+                   H43"
+            />
+
+        </svg>
+
+        <span>
+            PulseWatch
+        </span>
+
+    </a>
+
+
+    <!-- NAVIGATION -->
+
+    <nav
+        class="nav-links"
+        style="position: relative; z-index: 9999;"
+    >
+
+        <a href="/#services">
+            Services
+        </a>
+
+        <a href="/#features">
+            Features
+        </a>
+
+        <a href="/#how">
+            How It Works
+        </a>
+
+        <a href="/status">
+            Service Status
+        </a>
+
+        <a
+            class="nav-login"
+            href="/login"
+        >
+            Login
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<main>
+
+<section class="landing-hero">
+
+    <div
+        class="hero-watermark"
+        aria-hidden="true"
+    >
+        PULSEWATCH
+    </div>
+
+
+    <!-- LEFT -->
+
+    <div class="hero-copy">
+
+        <div class="live-badge">
+
+            <span class="live-dot"></span>
+
+            LIVE MONITORING
+
+        </div>
+
+
+        <p class="eyebrow">
+            WEBSITE &amp; API MONITORING
+        </p>
+
+
+        <h1>
+            PULSE<span>WATCH</span>
+        </h1>
+
+
+        <p class="hero-tagline">
+            Know when your services go silent.
+        </p>
+
+
+        <p class="hero-description">
+            Monitor websites and APIs, track uptime,
+            measure performance, and detect incidents
+            from one simple dashboard.
+        </p>
+
+
+        <div class="hero-actions">
+
+            <a
+                class="hero-btn hero-btn-primary"
+                href="/login"
+            >
+
+                <span>
+                    Start Monitoring
+                </span>
+
+                <strong>
+                    →
+                </strong>
+
+            </a>
+
+
+            <a
+                class="hero-btn hero-btn-secondary"
+                href="/status"
+            >
+                View Live Services
+            </a>
+
+        </div>
+
+
+        <div class="hero-live-info">
+
+            <span class="live-dot"></span>
+
+            <span>
+                PulseWatch is monitoring your public services
+            </span>
+
+            <span class="live-line"></span>
+
+            <span>
+                System operational
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT -->
+
+    <div class="hero-status-panel">
+
+        <div class="status-main-card">
+
+            <div class="status-check">
+                ✓
+            </div>
+
+
+            <div class="status-main-content">
+
+                <div class="status-card-topline">
+
+                    <span>
+                        SYSTEM STATUS
+                    </span>
+
+                    <span class="status-live">
+
+                        <i></i>
+
+                        LIVE
+
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    All Systems Operational
+                </strong>
+
+
+                <span>
+                    Your monitored services are being checked.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="status-card-grid">
+
+            <div class="status-card">
+
+                <div class="status-card-icon uptime-icon">
+                    ◉
+                </div>
+
+                <strong>
+                    LIVE
+                </strong>
+
+                <span>
+                    Monitoring
+                </span>
+
+                <div class="status-live-mini">
+                    <i></i>
+                    Active
+                </div>
+
+            </div>
+
+
+            <div class="status-card">
+
+                <div class="status-card-icon uptime-icon">
+                    ↗
+                </div>
+
+                <strong>
+                    HTTP
+                </strong>
+
+                <span>
+                    Health Checks
+                </span>
+
+                <div class="mini-progress">
+                    <span></span>
+                </div>
+
+            </div>
+
+
+            <div class="status-card">
+
+                <div class="status-card-icon response-icon">
+                    ◷
+                </div>
+
+                <strong>
+                    Real-time
+                </strong>
+
+                <span>
+                    Response Tracking
+                </span>
+
+                <div class="response-wave">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SERVICES
+===================================================== -->
+
+<section
+    id="services"
+    class="product-section"
+>
+
+    <div class="product-section-heading">
+
+        <div>
+
+            <p class="section-eyebrow">
+                YOUR SERVICES
+            </p>
+
+            <h2>
+                Everything you monitor,
+                in one place.
+            </h2>
+
+            <p>
+                PulseWatch checks your websites and APIs
+                continuously and turns their health into
+                clear, actionable information.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="service-preview-grid">
+
+        <article class="service-preview-card">
+
+            <div class="service-preview-top">
+
+                <div class="service-preview-icon">
+                    ◉
+                </div>
+
+                <span class="service-preview-status">
+                    OPERATIONAL
+                </span>
+
+            </div>
+
+            <h3>
+                Website Monitoring
+            </h3>
+
+            <p>
+                Check whether your website is reachable
+                and responding with the expected status.
+            </p>
+
+            <div class="service-preview-footer">
+
+                <span>
+                    HTTP / HTTPS
+                </span>
+
+                <strong>
+                    200 OK
+                </strong>
+
+            </div>
+
+        </article>
+
+
+        <article class="service-preview-card">
+
+            <div class="service-preview-top">
+
+                <div class="service-preview-icon cyan">
+                    ◷
+                </div>
+
+                <span class="service-preview-status">
+                    MONITORED
+                </span>
+
+            </div>
+
+            <h3>
+                API Monitoring
+            </h3>
+
+            <p>
+                Measure API availability, HTTP status
+                and response performance.
+            </p>
+
+            <div class="service-preview-footer">
+
+                <span>
+                    RESPONSE
+                </span>
+
+                <strong>
+                    Real-time
+                </strong>
+
+            </div>
+
+        </article>
+
+
+        <article class="service-preview-card">
+
+            <div class="service-preview-top">
+
+                <div class="service-preview-icon warning">
+                    !
+                </div>
+
+                <span class="service-preview-status">
+                    INCIDENT READY
+                </span>
+
+            </div>
+
+            <h3>
+                Incident Detection
+            </h3>
+
+            <p>
+                Detect downtime, create incidents and
+                track recovery automatically.
+            </p>
+
+            <div class="service-preview-footer">
+
+                <span>
+                    STATUS
+                </span>
+
+                <strong>
+                    Automated
+                </strong>
+
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <!-- DASHBOARD VISUAL -->
+
+    <div class="product-showcase">
+
+        <div class="product-showcase-copy">
+
+            <p class="section-eyebrow">
+                MONITORING DASHBOARD
+            </p>
+
+            <h2>
+                See service health
+                without the noise.
+            </h2>
+
+            <p>
+                Get a clear view of uptime, response time,
+                HTTP status and incidents from one
+                simple control center.
+            </p>
+
+
+            <div class="visual-points">
+
+                <div class="visual-point">
+                    <i></i>
+                    Real HTTP/HTTPS health checks
+                </div>
+
+                <div class="visual-point">
+                    <i></i>
+                    Response-time measurement
+                </div>
+
+                <div class="visual-point">
+                    <i></i>
+                    Uptime and incident tracking
+                </div>
+
+                <div class="visual-point">
+                    <i></i>
+                    Public service status
+                </div>
+
+            </div>
+
+
+            <a
+                class="text-link"
+                href="/status"
+            >
+                View live service status
+                <span>→</span>
+            </a>
+
+        </div>
+
+
+        <!-- Dashboard visual -->
+
+        <div class="hero-product-visual">
+
+            <div class="monitor-window">
+
+                <div class="monitor-window-header">
+
+                    <div class="monitor-brand-mini">
+
+                        <svg
+                            class="mini-logo"
+                            viewBox="0 0 48 48"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                class="logo-cloud"
+                                d="M12 31
+                                   C7 31 5 27 6 23
+                                   C7 19 11 17 15 18
+                                   C17 12 22 9 28 10
+                                   C34 10 38 14 39 20
+                                   C43 20 46 23 46 27
+                                   C46 31 43 34 39 34
+                                   H12"
+                            />
+
+                            <path
+                                class="logo-pulse"
+                                d="M8 26
+                                   H16
+                                   L20 20
+                                   L24 31
+                                   L29 15
+                                   L34 27
+                                   H43"
+                            />
+
+                        </svg>
+
+                        <span>
+                            PulseWatch
+                        </span>
+
+                    </div>
+
+
+                    <div class="monitor-live">
+                        <i></i>
+                        LIVE
+                    </div>
+
+                </div>
+
+
+                <div class="monitor-body">
+
+                    <div class="monitor-title">
+
+                        <div>
+
+                            <span>
+                                SERVICE HEALTH
+                            </span>
+
+                            <strong>
+                                All Systems Operational
+                            </strong>
+
+                        </div>
+
+                        <div class="monitor-check">
+                            ✓
+                        </div>
+
+                    </div>
+
+
+                    <div class="monitor-stats">
+
+                        <div>
+
+                            <span>
+                                UPTIME
+                            </span>
+
+                            <strong>
+                                100%
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                RESPONSE
+                            </span>
+
+                            <strong>
+                                269 ms
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                INCIDENTS
+                            </span>
+
+                            <strong>
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="monitor-chart">
+
+                        <div class="chart-line"></div>
+
+                        <div class="chart-glow"></div>
+
+                    </div>
+
+
+                    <div class="monitor-services">
+
+                        <div>
+
+                            <span class="service-green"></span>
+
+                            <span>
+                                Website API
+                            </span>
+
+                            <strong>
+                                Operational
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="service-green"></span>
+
+                            <span>
+                                Production
+                            </span>
+
+                            <strong>
+                                Operational
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="service-green"></span>
+
+                            <span>
+                                Public API
+                            </span>
+
+                            <strong>
+                                Operational
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section
+    id="features"
+    class="landing-section features-section"
+>
+
+    <div class="section-heading">
+
+        <p class="section-eyebrow">
+            CORE CAPABILITIES
+        </p>
+
+        <h2>
+            Everything you need to keep
+            services healthy.
+        </h2>
+
+        <p>
+            Simple monitoring tools built for
+            developers and DevOps workflows.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <article class="feature-card">
+
+            <div class="feature-icon">
+                ⌁
+            </div>
+
+            <div>
+
+                <h3>
+                    Real-time Monitoring
+                </h3>
+
+                <p>
+                    Continuously check your websites
+                    and APIs for availability.
+                </p>
+
+            </div>
+
+        </article>
+
+
+        <article class="feature-card">
+
+            <div class="feature-icon feature-green">
+                ↗
+            </div>
+
+            <div>
+
+                <h3>
+                    Uptime &amp; Performance
+                </h3>
+
+                <p>
+                    Track availability, HTTP status
+                    and response times.
+                </p>
+
+            </div>
+
+        </article>
+
+
+        <article class="feature-card">
+
+            <div class="feature-icon feature-red">
+                !
+            </div>
+
+            <div>
+
+                <h3>
+                    Incident Detection
+                </h3>
+
+                <p>
+                    Detect downtime and track when
+                    services recover.
+                </p>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     HOW IT WORKS
+===================================================== -->
+
+<section
+    id="how"
+    class="landing-section how-section"
+>
+
+    <div class="section-heading centered">
+
+        <p class="section-eyebrow">
+            HOW IT WORKS
+        </p>
+
+        <h2>
+            Monitor in three simple steps.
+        </h2>
+
+        <p>
+            No complicated infrastructure.
+            Add a service and let PulseWatch
+            do the checking.
+        </p>
+
+    </div>
+
+
+    <div class="steps-grid">
+
+        <article class="step-card">
+
+            <div class="step-number">
+                01
+            </div>
+
+            <div>
+
+                <h3>
+                    Add your URL
+                </h3>
+
+                <p>
+                    Add a public website or API
+                    endpoint and configure the
+                    expected response.
+                </p>
+
+            </div>
+
+            <div class="step-arrow">
+                →
+            </div>
+
+        </article>
+
+
+        <article class="step-card">
+
+            <div class="step-number">
+                02
+            </div>
+
+            <div>
+
+                <h3>
+                    PulseWatch checks it
+                </h3>
+
+                <p>
+                    The monitoring engine periodically
+                    checks availability, HTTP status
+                    and response time.
+                </p>
+
+            </div>
+
+            <div class="step-arrow">
+                →
+            </div>
+
+        </article>
+
+
+        <article class="step-card">
+
+            <div class="step-number">
+                03
+            </div>
+
+            <div>
+
+                <h3>
+                    View service health
+                </h3>
+
+                <p>
+                    See uptime, performance,
+                    incidents and current status
+                    from one platform.
+                </p>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CTA
+===================================================== -->
+
+<section class="landing-cta">
+
+    <div class="cta-icon">
+
+        <svg
+            class="cta-logo"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+        >
+
+            <path
+                class="logo-cloud"
+                d="M12 31
+                   C7 31 5 27 6 23
+                   C7 19 11 17 15 18
+                   C17 12 22 9 28 10
+                   C34 10 38 14 39 20
+                   C43 20 46 23 46 27
+                   C46 31 43 34 39 34
+                   H12"
+            />
+
+            <path
+                class="logo-pulse"
+                d="M8 26
+                   H16
+                   L20 20
+                   L24 31
+                   L29 15
+                   L34 27
+                   H43"
+            />
+
+        </svg>
+
+    </div>
+
+
+    <div class="cta-copy">
+
+        <p class="section-eyebrow">
+            KEEP YOUR SERVICES HEALTHY
+        </p>
+
+        <h2>
+            Know when your services go silent.
+        </h2>
+
+        <p>
+            Start monitoring your websites and
+            APIs with PulseWatch.
+        </p>
+
+    </div>
+
+
+    <a
+        class="hero-btn hero-btn-primary"
+        href="/login"
+    >
+        Start Monitoring
+        <strong>
+            →
+        </strong>
+    </a>
+
+</section>
+
+
+</main>
+
+
+<!-- =====================================================
+     TOAST POPUP
+===================================================== -->
+
+<div
+    id="pw-toast-stack"
+    class="pw-toast-stack"
+    aria-live="polite"
+></div>
+
+
+<script>
+
+function showPulseToast(
+    title,
+    message,
+    icon = "✓"
+) {
+
+    const stack =
+        document.getElementById(
+            "pw-toast-stack"
+        );
+
+    if (!stack) return;
+
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        "pw-toast";
+
+
+    toast.innerHTML = `
+
+        <div class="pw-toast-icon">
+            ${icon}
+        </div>
+
+        <div class="pw-toast-content">
+
+            <strong>
+                ${title}
+            </strong>
+
+            <span>
+                ${message}
+            </span>
+
+        </div>
+
+        <button
+            class="pw-toast-close"
+            type="button"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+    `;
+
+
+    toast
+        .querySelector(".pw-toast-close")
+        .onclick = () => {
+            toast.remove();
+        };
+
+
+    stack.appendChild(toast);
+
+
+    setTimeout(() => {
+
+        if (!toast.isConnected) {
+            return;
+        }
+
+        toast.classList.add(
+            "toast-closing"
+        );
+
+        setTimeout(
+            () => toast.remove(),
+            250
+        );
+
+    }, 4500);
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        setTimeout(() => {
+
+            showPulseToast(
+                "Live monitoring active",
+                "PulseWatch is ready to monitor your services.",
+                "⌁"
+            );
+
+        }, 1800);
+
+    }
+);
+
+</script>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer landing-footer">
+
+    <div class="footer-brand">
+
+        <div class="footer-logo">
+
+            <svg
+                class="footer-logo-svg"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+            >
+
+                <path
+                    class="logo-cloud"
+                    d="M12 31
+                       C7 31 5 27 6 23
+                       C7 19 11 17 15 18
+                       C17 12 22 9 28 10
+                       C34 10 38 14 39 20
+                       C43 20 46 23 46 27
+                       C46 31 43 34 39 34
+                       H12"
+                />
+
+                <path
+                    class="logo-pulse"
+                    d="M8 26
+                       H16
+                       L20 20
+                       L24 31
+                       L29 15
+                       L34 27
+                       H43"
+                />
+
+            </svg>
+
+
+            <strong>
+                PulseWatch
+            </strong>
+
+        </div>
+
+
+        <p>
+            Know when your services go silent.
+        </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="/#services">
+            Services
+        </a>
+
+        <a href="/#features">
+            Features
+        </a>
+
+        <a href="/#how">
+            How It Works
+        </a>
+
+        <a href="/status">
+            Service Status
+        </a>
+
+        <a href="/login">
+            Login
+        </a>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <span>
+            Reliable • Simple • Built for Developers
+        </span>
+
+        <span>
+            PulseWatch
+        </span>
+
+    </div>
+
+</footer>
+
+{% endblock %}

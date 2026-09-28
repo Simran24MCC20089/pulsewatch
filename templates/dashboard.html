@@ -1,0 +1,491 @@
+{% extends "admin_base.html" %}
+
+{% block admin_title %}Control Center — PulseWatch{% endblock %}
+
+{% block admin_content %}
+
+<div class="dashboard-page">
+
+    <header class="page-head dashboard-head">
+        <div>
+            <p class="dashboard-eyebrow">SYSTEM OVERVIEW</p>
+            <h1>PulseWatch Control Center</h1>
+            <p>Monitor your services and keep your applications healthy.</p>
+        </div>
+    </header>
+
+
+    <!-- KPI CARDS -->
+    <section class="metrics dashboard-metrics">
+
+        <article class="metric-card">
+            <span class="metric-icon">◉</span>
+            <div>
+                <h2>{{ metrics.monitored }}</h2>
+                <p>Monitored Services</p>
+            </div>
+        </article>
+
+        <article class="metric-card">
+            <span class="metric-icon metric-online">✓</span>
+            <div>
+                <h2>{{ metrics.online }}</h2>
+                <p>Services Online</p>
+            </div>
+        </article>
+
+        <article class="metric-card">
+            <span class="metric-icon">↗</span>
+            <div>
+                <h2>{{ "%.2f"|format(metrics.avg_uptime) }}%</h2>
+                <p>Average Uptime</p>
+            </div>
+        </article>
+
+        <article class="metric-card">
+            <span class="metric-icon">◷</span>
+            <div>
+                <h2>{{ "%.1f"|format(metrics.avg_response) }} ms</h2>
+                <p>Average Response Time</p>
+            </div>
+        </article>
+
+        <article class="metric-card">
+            <span class="metric-icon metric-alert">!</span>
+            <div>
+                <h2>{{ metrics.active_incidents }}</h2>
+                <p>Active Incidents</p>
+            </div>
+        </article>
+
+    </section>
+
+
+    <!-- CHART ROW -->
+    <section class="dashboard-chart-grid">
+
+        <article class="dashboard-panel chart-panel chart-wide">
+
+            <div class="panel-head">
+                <div>
+                    <span class="panel-kicker">PERFORMANCE</span>
+                    <h2>Response Time Trend</h2>
+                </div>
+                <span class="panel-meta">Latest checks</span>
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="responseChart"></canvas>
+            </div>
+
+        </article>
+
+
+        <article class="dashboard-panel chart-panel">
+
+            <div class="panel-head">
+                <div>
+                    <span class="panel-kicker">HEALTH</span>
+                    <h2>Service Health</h2>
+                </div>
+            </div>
+
+            <div class="health-chart-wrap">
+                <canvas id="healthChart"></canvas>
+            </div>
+
+            <div class="health-legend">
+                <span>
+                    <i class="legend-dot legend-up"></i>
+                    UP {{ health_counts.UP }}
+                </span>
+                <span>
+                    <i class="legend-dot legend-down"></i>
+                    DOWN {{ health_counts.DOWN }}
+                </span>
+                <span>
+                    <i class="legend-dot legend-unknown"></i>
+                    UNKNOWN {{ health_counts.UNKNOWN }}
+                </span>
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- AVAILABILITY + INCIDENTS -->
+    <section class="dashboard-two-column">
+
+        <article class="dashboard-panel chart-panel">
+
+            <div class="panel-head">
+                <div>
+                    <span class="panel-kicker">AVAILABILITY</span>
+                    <h2>Service Availability</h2>
+                </div>
+            </div>
+
+            {% if availability %}
+                <div class="chart-wrap availability-chart">
+                    <canvas id="availabilityChart"></canvas>
+                </div>
+            {% else %}
+                <div class="dashboard-empty">
+                    <span>◌</span>
+                    <p>No monitors available yet.</p>
+                </div>
+            {% endif %}
+
+        </article>
+
+
+        <article class="dashboard-panel">
+
+            <div class="panel-head">
+                <div>
+                    <span class="panel-kicker">EVENTS</span>
+                    <h2>Recent Incidents</h2>
+                </div>
+
+                <a href="{{ url_for('admin.incidents') }}" class="panel-link">
+                    View all →
+                </a>
+            </div>
+
+            {% if recent_incidents %}
+
+                <div class="incident-mini-list">
+
+                    {% for incident in recent_incidents %}
+
+                        <div class="incident-mini-item">
+
+                            <div class="incident-mini-status
+                                {% if incident.status == 'active' %}
+                                    incident-active
+                                {% else %}
+                                    incident-recovered
+                                {% endif %}
+                            ">
+                                {% if incident.status == 'active' %}
+                                    !
+                                {% else %}
+                                    ✓
+                                {% endif %}
+                            </div>
+
+                            <div class="incident-mini-info">
+
+                                <strong>
+                                    {{ incident.monitor.name }}
+                                </strong>
+
+                                <span>
+                                    {{ incident.status|capitalize }}
+                                    ·
+                                    {{ incident.started_at.strftime("%d %b, %H:%M") if incident.started_at else "—" }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="dashboard-empty compact">
+                    <span>✓</span>
+                    <p>No incidents recorded.</p>
+                </div>
+
+            {% endif %}
+
+        </article>
+
+    </section>
+
+
+    <!-- RECOMMENDATIONS -->
+    <section class="dashboard-panel recommendations-panel">
+
+        <div class="panel-head">
+            <div>
+                <span class="panel-kicker">DIAGNOSTICS</span>
+                <h2>System Recommendations</h2>
+            </div>
+        </div>
+
+        {% if recommendations %}
+
+            <div class="recommendation-grid">
+
+                {% for rec in recommendations %}
+
+                    <article class="recommendation-item">
+
+                        <div class="recommendation-icon">
+                            {% if "high response" in rec.title|lower %}
+                                ◷
+                            {% elif "availability" in rec.title|lower %}
+                                ↗
+                            {% else %}
+                                !
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <strong>{{ rec.title }}</strong>
+                            <p>{{ rec.message }}</p>
+
+                            <time>
+                                {{ rec.created_at.strftime("%d %b %Y · %H:%M") if rec.created_at else "—" }}
+                            </time>
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="dashboard-empty compact">
+                <span>✓</span>
+                <p>No diagnostic recommendations yet. They appear after real health checks.</p>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+
+<!-- =====================================================
+     REAL DATA FOR CHARTS
+===================================================== -->
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<script>
+    const responseTrend = {{ response_trend | tojson }};
+    const healthCounts = {{ health_counts | tojson }};
+    const availability = {{ availability | tojson }};
+
+    const chartFont = {
+        family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    };
+
+    const gridColor = "rgba(120, 160, 200, 0.10)";
+    const textColor = "#7f98b8";
+
+
+    /* RESPONSE TIME */
+
+    const responseCanvas = document.getElementById("responseChart");
+
+    if (responseCanvas) {
+
+        new Chart(responseCanvas, {
+            type: "line",
+
+            data: {
+                labels: responseTrend.map(item => item.label),
+
+                datasets: [{
+                    label: "Response time",
+
+                    data: responseTrend.map(item => item.value),
+
+                    borderColor: "#52cfff",
+                    backgroundColor: "rgba(82, 207, 255, 0.10)",
+
+                    borderWidth: 2,
+                    tension: 0.35,
+                    fill: true,
+
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+
+                    pointBackgroundColor: "#52cfff",
+                    pointBorderColor: "#07111e"
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+                    x: {
+                        grid: {
+                            color: gridColor
+                        },
+
+                        ticks: {
+                            color: textColor,
+                            maxTicksLimit: 8,
+                            font: chartFont
+                        }
+                    },
+
+                    y: {
+                        beginAtZero: true,
+
+                        grid: {
+                            color: gridColor
+                        },
+
+                        ticks: {
+                            color: textColor,
+                            font: chartFont,
+
+                            callback: value => value + " ms"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    /* SERVICE HEALTH */
+
+    const healthCanvas = document.getElementById("healthChart");
+
+    if (healthCanvas) {
+
+        new Chart(healthCanvas, {
+            type: "doughnut",
+
+            data: {
+                labels: [
+                    "Operational",
+                    "Down",
+                    "Unknown"
+                ],
+
+                datasets: [{
+                    data: [
+                        healthCounts.UP,
+                        healthCounts.DOWN,
+                        healthCounts.UNKNOWN
+                    ],
+
+                    backgroundColor: [
+                        "#38d996",
+                        "#ff6578",
+                        "#71839d"
+                    ],
+
+                    borderColor: "#0a1524",
+                    borderWidth: 4,
+
+                    hoverOffset: 6
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                cutout: "70%",
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+
+    /* SERVICE AVAILABILITY */
+
+    const availabilityCanvas =
+        document.getElementById("availabilityChart");
+
+    if (availabilityCanvas) {
+
+        new Chart(availabilityCanvas, {
+            type: "bar",
+
+            data: {
+                labels: availability.map(item => item.name),
+
+                datasets: [{
+                    label: "Uptime",
+
+                    data: availability.map(item => item.uptime),
+
+                    backgroundColor: "rgba(82, 207, 255, 0.65)",
+                    borderColor: "#52cfff",
+                    borderWidth: 1,
+
+                    borderRadius: 7
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+
+                        ticks: {
+                            color: textColor,
+                            font: chartFont
+                        }
+                    },
+
+                    y: {
+                        min: 0,
+                        max: 100,
+
+                        grid: {
+                            color: gridColor
+                        },
+
+                        ticks: {
+                            color: textColor,
+                            font: chartFont,
+
+                            callback: value => value + "%"
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+
+<!-- Chart.js -->
+<script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+></script>
+
+{% endblock %}

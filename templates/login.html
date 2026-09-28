@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}
+PulseWatch — Login
+{% endblock %}
+
+{% block body_class %}
+page-public
+{% endblock %}
+
+{% block body %}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <!-- LOGO -->
+        <a href="/" class="auth-brand">
+
+            <svg
+                class="brand-logo"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+            >
+                <path
+                    class="logo-cloud"
+                    d="M12 31
+                       C7 31 5 27 6 23
+                       C7 19 11 17 15 18
+                       C17 12 22 9 28 10
+                       C34 10 38 14 39 20
+                       C43 20 46 23 46 27
+                       C46 31 43 34 39 34
+                       H12"
+                />
+
+                <path
+                    class="logo-pulse"
+                    d="M8 26
+                       H16
+                       L20 20
+                       L24 31
+                       L29 15
+                       L34 27
+                       H43"
+                />
+            </svg>
+
+            <span>PulseWatch</span>
+
+        </a>
+
+
+        <!-- HEADER -->
+        <div class="auth-header">
+
+            <p class="section-eyebrow">
+                ADMIN ACCESS
+            </p>
+
+            <h1>
+                Welcome back
+            </h1>
+
+            <p>
+                Sign in to access your PulseWatch dashboard.
+            </p>
+
+        </div>
+
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash flash-{{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- LOGIN FORM -->
+        <form
+            method="POST"
+            action="{{ url_for('auth.login') }}"
+            class="auth-form"
+        >
+
+            <!-- USERNAME -->
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                />
+
+            </div>
+
+
+            <!-- PASSWORD -->
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    />
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword()"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+            <button
+                type="submit"
+                class="btn btn-primary auth-submit"
+            >
+                <span>Login</span>
+                <strong>→</strong>
+            </button>
+
+        </form>
+
+
+        <!-- FOOTER -->
+        <div class="auth-footer">
+
+            <a href="{{ url_for('public.landing') }}">
+                ← Back to PulseWatch
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function togglePassword() {
+
+    const password = document.getElementById("password");
+    const button = document.querySelector(".password-toggle");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+        button.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+        button.textContent = "Show";
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

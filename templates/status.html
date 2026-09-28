@@ -1,0 +1,854 @@
+{% extends "base.html" %}
+
+{% block title %}
+PulseWatch — Service Status
+{% endblock %}
+
+{% block body_class %}
+page-public
+{% endblock %}
+
+{% block body %}
+
+<div class="status-page-wrapper">
+
+    <!-- HEADER -->
+    <header class="status-header">
+
+        <a
+            class="status-brand"
+            href="{{ url_for('public.landing') }}"
+        >
+            <span class="status-brand-icon">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path
+                        d="M12 31
+                           C7 31 5 27 6 23
+                           C7 19 11 17 15 18
+                           C17 12 22 9 28 10
+                           C34 10 38 14 39 20
+                           C43 20 46 23 46 27
+                           C46 31 43 34 39 34
+                           H12"
+                    />
+
+                    <path
+                        d="M8 26
+                           H16
+                           L20 20
+                           L24 31
+                           L29 15
+                           L34 27
+                           H43"
+                    />
+                </svg>
+            </span>
+
+            <span>PulseWatch</span>
+        </a>
+
+        <a
+            class="status-back"
+            href="{{ url_for('public.landing') }}"
+        >
+            ← Back to Home
+        </a>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="status-page">
+
+        <div class="status-page-heading">
+
+            <p class="section-eyebrow">
+                PUBLIC STATUS
+            </p>
+
+            <h1>
+                Service Status
+            </h1>
+
+            <p>
+                Current health and availability of PulseWatch
+                public services.
+            </p>
+
+        </div>
+
+
+        <!-- OVERALL STATUS -->
+        <section class="status-overall-card">
+
+            <div class="overall-icon
+                {% if overall == 'operational' %}
+                    operational
+                {% elif overall == 'degraded' %}
+                    degraded
+                {% else %}
+                    down
+                {% endif %}
+            ">
+                {% if overall == 'operational' %}
+                    ✓
+                {% elif overall == 'degraded' %}
+                    !
+                {% else %}
+                    ×
+                {% endif %}
+            </div>
+
+
+            <div class="overall-content">
+
+                <span class="status-card-label">
+                    OVERALL SYSTEM STATUS
+                </span>
+
+                <h2 class="
+                    {% if overall == 'operational' %}
+                        overall-operational
+                    {% elif overall == 'degraded' %}
+                        overall-degraded
+                    {% else %}
+                        overall-down
+                    {% endif %}
+                ">
+                    {{ overall_label }}
+                </h2>
+
+                <p>
+                    {{ client_message }}
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- SERVICES -->
+        <section class="public-services-section">
+
+            <div class="public-section-heading">
+
+                <div>
+                    <p class="section-eyebrow">
+                        MONITORED SERVICES
+                    </p>
+
+                    <h2>
+                        Service health
+                    </h2>
+                </div>
+
+                <span class="service-count">
+                    {{ services|length }} service{% if services|length != 1 %}s{% endif %}
+                </span>
+
+            </div>
+
+
+            {% if services %}
+
+                <div class="public-service-list">
+
+                    {% for service in services %}
+
+                        <a
+                            class="public-service-card"
+                            href="{{ url_for(
+                                'public.service_status',
+                                monitor_id=service.id
+                            ) }}"
+                        >
+
+                            <div class="public-service-main">
+
+                                <div class="public-service-icon
+                                    {% if service.status == 'operational' %}
+                                        service-ok
+                                    {% elif service.status == 'degraded' %}
+                                        service-warning
+                                    {% else %}
+                                        service-error
+                                    {% endif %}
+                                ">
+
+                                    {% if service.status == 'operational' %}
+                                        ✓
+                                    {% elif service.status == 'degraded' %}
+                                        !
+                                    {% else %}
+                                        ×
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="public-service-info">
+
+                                    <h3>
+                                        {{ service.name }}
+                                    </h3>
+
+                                    <p>
+                                        {{ service.url }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="public-service-meta">
+
+                                <div class="service-status-text
+                                    {% if service.status == 'operational' %}
+                                        text-operational
+                                    {% elif service.status == 'degraded' %}
+                                        text-degraded
+                                    {% else %}
+                                        text-down
+                                    {% endif %}
+                                ">
+
+                                    {% if service.status == 'operational' %}
+                                        Operational
+                                    {% elif service.status == 'degraded' %}
+                                        Degraded
+                                    {% else %}
+                                        Unavailable
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="service-response">
+
+                                    {% if service.response_time_ms is not none %}
+                                        {{ service.response_time|round|int }} ms
+                                    {% else %}
+                                        —
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="service-arrow">
+                                    →
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="status-empty">
+
+                    <div class="status-empty-icon">
+                        ◉
+                    </div>
+
+                    <h3>
+                        No public services yet
+                    </h3>
+
+                    <p>
+                        There are currently no public services
+                        configured for monitoring.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- INFORMATION -->
+        <section class="status-info-grid">
+
+            <div class="status-info-card">
+
+                <span class="info-icon">
+                    ✓
+                </span>
+
+                <div>
+                    <strong>
+                        Operational
+                    </strong>
+
+                    <p>
+                        Service is responding normally.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="status-info-card">
+
+                <span class="info-icon warning-icon">
+                    !
+                </span>
+
+                <div>
+                    <strong>
+                        Degraded
+                    </strong>
+
+                    <p>
+                        Service is available but performance
+                        may be affected.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="status-info-card">
+
+                <span class="info-icon error-icon">
+                    ×
+                </span>
+
+                <div>
+                    <strong>
+                        Unavailable
+                    </strong>
+
+                    <p>
+                        Service is currently unreachable
+                        or failing health checks.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="status-footer">
+
+        <span>
+            PulseWatch
+        </span>
+
+        <span>
+            Reliable • Simple • Built for Developers
+        </span>
+
+    </footer>
+
+</div>
+
+
+<style>
+
+/* =====================================================
+   PUBLIC STATUS PAGE
+===================================================== */
+
+.status-page-wrapper {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(30, 180, 255, 0.08),
+            transparent 40%
+        ),
+        #050914;
+    color: #eef6ff;
+}
+
+
+/* HEADER */
+
+.status-header {
+    width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 24px 6vw;
+
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.status-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: #ffffff;
+    text-decoration: none;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.status-brand-icon {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+}
+
+.status-brand-icon svg {
+    width: 34px;
+    height: 34px;
+
+    fill: none;
+    stroke: #39c8ff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.status-brand-icon svg path:last-child {
+    stroke: #ffffff;
+}
+
+.status-back {
+    color: #9aa9bd;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.status-back:hover {
+    color: #ffffff;
+}
+
+
+/* MAIN */
+
+.status-page {
+    width: min(1000px, 88%);
+    margin: 0 auto;
+
+    padding: 70px 0 80px;
+}
+
+.status-page-heading {
+    margin-bottom: 40px;
+}
+
+.status-page-heading h1 {
+    margin: 8px 0 12px;
+
+    font-size: clamp(2.3rem, 5vw, 4rem);
+    line-height: 1;
+}
+
+.status-page-heading p:last-child {
+    color: #8d9bb0;
+    max-width: 650px;
+}
+
+
+/* OVERALL */
+
+.status-overall-card {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+
+    padding: 26px;
+
+    margin-bottom: 55px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+
+    background: rgba(10, 18, 32, 0.8);
+}
+
+.overall-icon {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.overall-icon.operational {
+    color: #45e69a;
+    background: rgba(69,230,154,0.12);
+}
+
+.overall-icon.degraded {
+    color: #ffc857;
+    background: rgba(255,200,87,0.12);
+}
+
+.overall-icon.down {
+    color: #ff647c;
+    background: rgba(255,100,124,0.12);
+}
+
+.overall-content {
+    min-width: 0;
+}
+
+.status-card-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #718198;
+
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+}
+
+.overall-content h2 {
+    margin: 0 0 6px;
+    font-size: 1.5rem;
+}
+
+.overall-content p {
+    margin: 0;
+    color: #8997aa;
+}
+
+.overall-operational {
+    color: #45e69a;
+}
+
+.overall-degraded {
+    color: #ffc857;
+}
+
+.overall-down {
+    color: #ff647c;
+}
+
+
+/* SERVICES */
+
+.public-services-section {
+    margin-bottom: 45px;
+}
+
+.public-section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.public-section-heading h2 {
+    margin: 5px 0 0;
+    font-size: 1.7rem;
+}
+
+.service-count {
+    color: #718198;
+    font-size: 0.85rem;
+}
+
+
+.public-service-list {
+    display: grid;
+    gap: 12px;
+}
+
+
+.public-service-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+
+    padding: 20px 22px;
+
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 15px;
+
+    background: rgba(9, 17, 30, 0.8);
+
+    text-decoration: none;
+    color: inherit;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.public-service-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(57,200,255,0.35);
+
+    background: rgba(13, 25, 42, 0.95);
+}
+
+
+.public-service-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    min-width: 0;
+}
+
+.public-service-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    font-weight: 700;
+}
+
+.service-ok {
+    color: #45e69a;
+    background: rgba(69,230,154,0.1);
+}
+
+.service-warning {
+    color: #ffc857;
+    background: rgba(255,200,87,0.1);
+}
+
+.service-error {
+    color: #ff647c;
+    background: rgba(255,100,124,0.1);
+}
+
+
+.public-service-info {
+    min-width: 0;
+}
+
+.public-service-info h3 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+}
+
+.public-service-info p {
+    margin: 0;
+
+    color: #718198;
+
+    font-size: 0.8rem;
+
+    max-width: 480px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.public-service-meta {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    flex-shrink: 0;
+}
+
+.service-status-text {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.text-operational {
+    color: #45e69a;
+}
+
+.text-degraded {
+    color: #ffc857;
+}
+
+.text-down {
+    color: #ff647c;
+}
+
+.service-response {
+    min-width: 65px;
+
+    color: #9aa9bd;
+
+    font-family: monospace;
+    font-size: 0.8rem;
+
+    text-align: right;
+}
+
+.service-arrow {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+
+/* EMPTY */
+
+.status-empty {
+    text-align: center;
+
+    padding: 60px 20px;
+
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 16px;
+}
+
+.status-empty-icon {
+    margin-bottom: 15px;
+
+    color: #39c8ff;
+    font-size: 2rem;
+}
+
+.status-empty h3 {
+    margin: 0 0 8px;
+}
+
+.status-empty p {
+    margin: 0;
+    color: #718198;
+}
+
+
+/* INFO */
+
+.status-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.status-info-card {
+    display: flex;
+    gap: 13px;
+
+    padding: 18px;
+
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+
+    background: rgba(8, 15, 27, 0.7);
+}
+
+.info-icon {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 8px;
+
+    color: #45e69a;
+    background: rgba(69,230,154,0.1);
+}
+
+.warning-icon {
+    color: #ffc857;
+    background: rgba(255,200,87,0.1);
+}
+
+.error-icon {
+    color: #ff647c;
+    background: rgba(255,100,124,0.1);
+}
+
+.status-info-card strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.status-info-card p {
+    margin: 0;
+
+    color: #718198;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+
+/* FOOTER */
+
+.status-footer {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 22px 6vw;
+
+    border-top: 1px solid rgba(255,255,255,0.06);
+
+    color: #66758b;
+
+    font-size: 0.78rem;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+
+    .status-header {
+        padding: 20px;
+    }
+
+    .status-page {
+        width: 90%;
+        padding: 45px 0 60px;
+    }
+
+    .public-service-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .public-service-meta {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .status-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-footer {
+        flex-direction: column;
+        gap: 8px;
+        padding: 20px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

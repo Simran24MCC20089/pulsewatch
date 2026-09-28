@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ service.name }} — PulseWatch Status{% endblock %}
+{% block body %}
+<div class="ambient subtle" aria-hidden="true">
+  <div class="grid-dots"></div>
+</div>
+<header class="nav">
+  <a class="brand" href="{{ url_for('public.landing') }}">
+    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="" width="36" height="36" />
+    <span>PulseWatch</span>
+  </a>
+  <nav class="nav-links">
+    <a href="{{ url_for('public.status_page') }}">All services</a>
+  </nav>
+</header>
+<main class="status-page">
+  <p class="eyebrow">Public service</p>
+  <h1>{{ service.name }}</h1>
+  <p class="pill-status {{ service.display_status|lower }}">{{ service.display_status }}</p>
+  <section class="metrics public-metrics">
+    <article><h2>{{ "%.2f"|format(service.uptime) }}%</h2><p>Uptime</p></article>
+    <article><h2>{% if service.response_time is not none %}{{ "%.0f"|format(service.response_time) }} ms{% else %}—{% endif %}</h2><p>Response time</p></article>
+    <article><h2>{{ service.http_status or '—' }}</h2><p>HTTP status</p></article>
+    <article><h2 class="small-time">{{ service.last_checked or 'Not yet checked' }}</h2><p>Last checked</p></article>
+  </section>
+  {% if service.incident %}
+    <p class="flash flash-error">This service is currently unavailable.</p>
+  {% endif %}
+
+  <section class="panel">
+    <h2>Recent monitoring history</h2>
+    {% if checks %}
+    <table class="data">
+      <thead><tr><th>Time</th><th>Result</th><th>HTTP</th><th>Response</th></tr></thead>
+      <tbody>
+        {% for c in checks %}
+        <tr>
+          <td>{{ c.checked_at }}</td>
+          <td>{{ 'UP' if c.is_up else 'DOWN' }}</td>
+          <td class="mono">{{ c.http_status or '—' }}</td>
+          <td class="mono">{% if c.response_ms is not none %}{{ "%.0f"|format(c.response_ms) }} ms{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="muted">No checks recorded yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Recent incidents</h2>
+    {% if incidents %}
+    <table class="data">
+      <thead><tr><th>Status</th><th>Started</th><th>Recovered</th><th>Duration</th></tr></thead>
+      <tbody>
+        {% for i in incidents %}
+        <tr>
+          <td>{{ i.status|upper }}</td>
+          <td>{{ i.started_at }}</td>
+          <td>{{ i.recovered_at or '—' }}</td>
+          <td class="mono">{{ i.duration_label() }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="muted">No public incidents for this service.</p>
+    {% endif %}
+  </section>
+</main>
+{% endblock %}

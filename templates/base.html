@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>
+    {% block title %}PulseWatch{% endblock %}
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  />
+
+  <link
+    rel="icon"
+    href="{{ url_for('static', filename='images/logo.svg') }}"
+    type="image/svg+xml"
+  />
+
+  <!-- =====================================================
+       PULSEWATCH PAGE-SPECIFIC FIXES
+       These do not change the backend or existing pages.
+  ====================================================== -->
+
+  <style>
+
+    /* =====================================================
+       LOGIN PAGE
+       Keep the login card exactly in the center
+    ====================================================== */
+
+    .auth-page {
+      min-height: 100vh !important;
+      width: 100% !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      box-sizing: border-box !important;
+      padding: 40px 20px !important;
+
+      margin: 0 !important;
+    }
+
+    .auth-card {
+      width: min(510px, 100%) !important;
+
+      margin: 0 auto !important;
+
+      box-sizing: border-box !important;
+
+      position: relative !important;
+      z-index: 10 !important;
+    }
+
+
+    /* =====================================================
+       LANDING PAGE
+       Make navigation clickable
+    ====================================================== */
+
+    .landing-nav {
+      position: relative !important;
+      z-index: 1000 !important;
+    }
+
+    .landing-nav .brand {
+      position: relative !important;
+      z-index: 1001 !important;
+      pointer-events: auto !important;
+    }
+
+    .landing-nav .nav-links {
+      position: relative !important;
+      z-index: 1001 !important;
+
+      pointer-events: auto !important;
+    }
+
+    .landing-nav .nav-links a {
+      position: relative !important;
+      z-index: 1002 !important;
+
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+
+
+    /* =====================================================
+       LANDING BACKGROUND DECORATIONS
+       These must NOT capture mouse clicks.
+    ====================================================== */
+
+    .landing-ambient,
+    .grid-dots,
+    .landing-wave,
+    .hero-watermark {
+      pointer-events: none !important;
+    }
+
+
+    /* Keep hero content below navigation but clickable */
+    .landing-hero {
+      position: relative;
+      z-index: 2;
+    }
+
+  </style>
+</head>
+
+
+<body class="{% block body_class %}page-public{% endblock %}">
+
+  {% block body %}{% endblock %}
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

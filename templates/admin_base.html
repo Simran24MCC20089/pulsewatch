@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{% block admin_title %}PulseWatch{% endblock %}{% endblock %}
+{% block body_class %}page-admin{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  <aside class="sidebar">
+    <a class="brand brand-sidebar" href="{{ url_for('admin.dashboard') }}">
+      <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="" width="32" height="32" />
+      <span>PulseWatch</span>
+    </a>
+    <nav>
+      <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('admin.monitors') }}" class="{% if request.endpoint in ['admin.monitors', 'admin.edit_monitor'] %}active{% endif %}">Monitors</a>
+      <a href="{{ url_for('admin.incidents') }}" class="{% if request.endpoint == 'admin.incidents' %}active{% endif %}">Incidents</a>
+      <a href="{{ url_for('admin.analytics') }}" class="{% if request.endpoint == 'admin.analytics' %}active{% endif %}">Analytics</a>
+      <a href="{{ url_for('admin.settings') }}" class="{% if request.endpoint == 'admin.settings' %}active{% endif %}">Settings</a>
+    </nav>
+  </aside>
+  <div class="admin-main">
+    <header class="topbar">
+      <form class="search-form" method="get" action="{{ url_for('admin.monitors') }}">
+        <input type="search" name="q" placeholder="Search monitors" value="{{ request.args.get('q', '') }}" />
+      </form>
+      <div class="topbar-meta">
+        <span class="env-chip">Environment: {{ environment|capitalize }}</span>
+        <span class="notify" title="Notifications">{{ metrics.active_incidents if metrics is defined else '—' }}</span>
+        <span class="profile">{{ session.get('admin_username', 'Admin') }}</span>
+        <a class="btn btn-small" href="{{ url_for('auth.logout') }}">Logout</a>
+      </div>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-list padded">
+          {% for category, message in messages %}
+            <li class="flash flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <div class="admin-content">
+      {% block admin_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

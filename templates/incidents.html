@@ -1,0 +1,52 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}Incidents — PulseWatch{% endblock %}
+{% block admin_content %}
+<header class="page-head">
+  <h1>Incidents</h1>
+  <p>Created when a monitor moves from UP to DOWN. Recovered when it returns to UP. Repeated failures do not open a second incident.</p>
+</header>
+
+<form class="filter-row" method="get">
+  <select name="status">
+    <option value="">All</option>
+    <option value="active" {% if status == 'active' %}selected{% endif %}>Active</option>
+    <option value="recovered" {% if status == 'recovered' %}selected{% endif %}>Recovered</option>
+  </select>
+  <button class="btn btn-small" type="submit">Filter</button>
+</form>
+
+<section class="panel">
+  {% if incidents %}
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th>Monitor</th>
+          <th>Status</th>
+          <th>Started at</th>
+          <th>Recovered at</th>
+          <th>Duration</th>
+          <th>Error / HTTP</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in incidents %}
+        <tr>
+          <td>{{ i.monitor.name if i.monitor else '—' }}</td>
+          <td><span class="status-{{ 'down' if i.status == 'active' else 'up' }}">{{ i.status|upper }}</span></td>
+          <td>{{ i.started_at }}</td>
+          <td>{{ i.recovered_at or '—' }}</td>
+          <td class="mono">{{ i.duration_label() }}</td>
+          <td class="mono">{{ i.http_status or i.error_type or '—' }}</td>
+          <td>{{ i.description }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="muted">No incidents recorded yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

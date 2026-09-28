@@ -1,0 +1,173 @@
+{% extends "admin_base.html" %}
+
+{% block admin_title %}Edit {{ monitor.name }} — PulseWatch{% endblock %}
+
+{% block admin_content %}
+
+<header class="page-head monitor-page-head">
+    <div>
+        <p class="dashboard-eyebrow">MONITOR SETTINGS</p>
+        <h1>Edit monitor</h1>
+        <p>{{ monitor.url }}</p>
+    </div>
+</header>
+
+
+<section class="panel edit-monitor-panel">
+
+    <div class="panel-head monitor-section-head">
+        <div>
+            <span class="panel-kicker">CONFIGURATION</span>
+            <h2>Update monitoring settings</h2>
+            <p class="panel-help">
+                Changes will apply to future health checks.
+            </p>
+        </div>
+    </div>
+
+
+    <form class="monitor-form monitor-form-modern" method="post">
+
+        <div class="monitor-form-section">
+
+            <div class="form-section-title">
+                <span>1</span>
+                <div>
+                    <strong>Basic information</strong>
+                    <small>Update the service name and endpoint.</small>
+                </div>
+            </div>
+
+            <div class="monitor-form-grid monitor-form-grid-2">
+
+                <label>
+                    Monitor name
+                    <input
+                        name="name"
+                        required
+                        maxlength="120"
+                        value="{{ monitor.name }}"
+                    />
+                    <small>The name shown throughout PulseWatch.</small>
+                </label>
+
+                <label>
+                    URL
+                    <input
+                        name="url"
+                        type="url"
+                        required
+                        value="{{ monitor.url }}"
+                    />
+                    <small>The endpoint PulseWatch checks.</small>
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <div class="monitor-form-section">
+
+            <div class="form-section-title">
+                <span>2</span>
+                <div>
+                    <strong>Health check settings</strong>
+                    <small>Define when and how the service is checked.</small>
+                </div>
+            </div>
+
+            <div class="monitor-form-grid monitor-form-grid-3">
+
+                <label>
+                    Check interval
+                    <div class="input-with-unit">
+                        <input
+                            name="interval_seconds"
+                            type="number"
+                            min="10"
+                            max="3600"
+                            value="{{ monitor.interval_seconds }}"
+                        />
+                        <span>sec</span>
+                    </div>
+                    <small>How frequently the service is checked.</small>
+                </label>
+
+                <label>
+                    Timeout
+                    <div class="input-with-unit">
+                        <input
+                            name="timeout_seconds"
+                            type="number"
+                            min="1"
+                            max="60"
+                            value="{{ monitor.timeout_seconds }}"
+                        />
+                        <span>sec</span>
+                    </div>
+                    <small>Maximum response wait time.</small>
+                </label>
+
+                <label>
+                    Expected status
+                    <input
+                        name="expected_status"
+                        type="number"
+                        min="100"
+                        max="599"
+                        value="{{ monitor.expected_status }}"
+                    />
+                    <small>HTTP code treated as healthy.</small>
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <div class="monitor-form-section">
+
+            <div class="form-section-title">
+                <span>3</span>
+                <div>
+                    <strong>Visibility</strong>
+                    <small>Control where this monitor can be seen.</small>
+                </div>
+            </div>
+
+            <label class="visibility-select">
+                Public status
+                <select name="visibility">
+                    <option value="private" {% if not monitor.is_public %}selected{% endif %}>
+                        Private — admin dashboard only
+                    </option>
+                    <option value="public" {% if monitor.is_public %}selected{% endif %}>
+                        Public — visible on Service Status
+                    </option>
+                </select>
+            </label>
+
+        </div>
+
+
+        <div class="monitor-form-actions">
+
+            <button class="btn btn-primary monitor-add-btn" type="submit">
+                Save changes
+            </button>
+
+            <a
+                class="btn btn-ghost"
+                href="{{ url_for('admin.monitors') }}"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}

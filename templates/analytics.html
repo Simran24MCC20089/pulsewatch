@@ -1,0 +1,44 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}Analytics — PulseWatch{% endblock %}
+{% block admin_content %}
+<header class="page-head">
+  <h1>Analytics</h1>
+  <p>Figures are calculated from stored health checks — not placeholders.</p>
+</header>
+
+<section class="metrics">
+  <article><h2>{{ "%.2f"|format(stats.uptime) }}%</h2><p>Uptime percentage</p></article>
+  <article><h2>{{ "%.1f"|format(stats.avg_response) }} ms</h2><p>Average response time</p></article>
+  <article><h2>{{ stats.total_checks }}</h2><p>Total checks</p></article>
+  <article><h2>{{ stats.successful }}</h2><p>Successful checks</p></article>
+  <article><h2>{{ stats.failed }}</h2><p>Failed checks</p></article>
+  <article><h2>{{ stats.incident_count }}</h2><p>Incident count</p></article>
+  <article><h2>{{ stats.active_incidents }}</h2><p>Active incidents</p></article>
+  <article><h2>{{ "%.0f"|format(stats.avg_incident_duration) }}s</h2><p>Avg incident duration</p></article>
+</section>
+
+<section class="panel">
+  <h2>Service availability</h2>
+  {% for m in monitors %}
+    <div class="avail-row">
+      <span>{{ m.name }}</span>
+      <div class="bar"><span style="width: {{ m.uptime_percent }}%"></span></div>
+      <span class="mono">{{ "%.2f"|format(m.uptime_percent) }}%</span>
+    </div>
+  {% else %}
+    <p class="muted">No monitors yet.</p>
+  {% endfor %}
+</section>
+
+<section class="panel">
+  <h2>Response-time trends</h2>
+  <div id="charts" data-series='{{ trend_monitors | tojson }}'></div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    PulseWatch.drawTrends(document.getElementById("charts"));
+  });
+</script>
+{% endblock %}
